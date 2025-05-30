@@ -77,6 +77,11 @@ export default function App() {
           {years.map(y => <option key={y} value={y}>{y}</option>)}
         </select>
       </div>
+      <div>
+        <Link to="/submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Submit a Tutorial
+        </Link>
+      </div>
 
       {tutorials.length > 0 ? (
         <ul className="list-disc pl-6">

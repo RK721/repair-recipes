@@ -22,6 +22,8 @@ export default function CreateTutorial() {
       newForm[section][index][key] = e.target.value;
     }
     setForm(newForm);
+    console.clear();
+    console.log(form);
   };
 
   const addField = (section) => {

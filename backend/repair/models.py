@@ -44,7 +44,7 @@ class Step(models.Model):
     tutorial = models.ForeignKey(Tutorial, related_name='steps', on_delete=models.CASCADE)
     step_number = models.IntegerField()
     instruction = models.TextField()
-    image = models.ImageField(upload_to='steps/', blank=True, null=True)
+    #image = models.ImageField(upload_to='steps/', blank=True, null=True)
 
     def __str__(self):
         return f"Step {self.step_number} of {self.tutorial.title}"

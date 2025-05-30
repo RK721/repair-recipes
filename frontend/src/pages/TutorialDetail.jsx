@@ -50,7 +50,6 @@ export default function TutorialDetail() {
         {tutorial.steps.map(step => (
           <li key={step.id} className="mb-4">
             <p>{step.instruction}</p>
-            {step.image && <img src={`http://localhost:8000${step.image}`} alt="" className="mt-2 max-w-md" />}
           </li>
         ))}
       </ol>
