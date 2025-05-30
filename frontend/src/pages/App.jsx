@@ -1,55 +1,66 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function App() {
   const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
   const [years, setYears] = useState([]);
 
-  const [make, setMake] = useState('');
-  const [model, setModel] = useState('');
-  const [year, setYear] = useState('');
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
 
   const [tutorials, setTutorials] = useState([]);
   const [error, setError] = useState(null);
 
   // Load makes on initial render
   useEffect(() => {
-    axios.get('http://localhost:8000/vehicles/makes/')
-      .then(res => setMakes(res.data))
-      .catch(err => setError('Failed to load makes'));
+    axios
+      .get("http://localhost:8000/vehicles/makes/")
+      .then((res) => setMakes(res.data))
+      .catch((err) => setError("Failed to load makes"));
   }, []);
 
   // Load models when make is selected
   useEffect(() => {
-    if (!make) return;
-    axios.get(`http://localhost:8000/vehicles/models/?make=${make}`)
-      .then(res => setModels(res.data))
-      .catch(err => setError('Failed to load models'));
-    setModel('');
-    setYear('');
+    console.log("Selected make:", make);
+    if (make) {
+      axios
+        .get(`http://localhost:8000/vehicles/models/?make=${make}`)
+        .then((res) => setModels(res.data))
+        .catch((err) => setError("Failed to load models"));
+    }
+    setModel("");
+    setYear("");
     setYears([]);
     setTutorials([]);
   }, [make]);
 
   // Load years when model is selected
   useEffect(() => {
-    if (!make || !model) return;
-    axios.get(`http://localhost:8000/vehicles/years/?make=${make}&model=${model}`)
-      .then(res => setYears(res.data))
-      .catch(err => setError('Failed to load years'));
-    setYear('');
+    if (!(!make || !model)) {
+      axios
+        .get(
+          `http://localhost:8000/vehicles/years/?make=${make}&model=${model}`
+        )
+        .then((res) => setYears(res.data))
+        .catch((err) => setError("Failed to load years"));
+    }
+    setYear("");
     setTutorials([]);
   }, [model]);
 
   // Load tutorials when year is selected
   useEffect(() => {
     if (!make || !model || !year) return;
-    axios.get(`http://localhost:8000/tutorials/?make=${make}&model=${model}&year=${year}`)
-      .then(res => setTutorials(res.data))
-      .catch(err => setError('Failed to load tutorials'));
+    axios
+      .get(
+        `http://localhost:8000/tutorials/?make=${make}&model=${model}&year=${year}`
+      )
+      .then((res) => setTutorials(res.data))
+      .catch((err) => setError("Failed to load tutorials"));
   }, [year]);
 
   return (
@@ -59,35 +70,64 @@ export default function App() {
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
       <div className="flex flex-wrap gap-4 mb-6">
-        <select value={make} onChange={(e) => setMake(e.target.value)}
-                className="border p-2 w-40">
+        <select
+          value={make}
+          onChange={(e) => setMake(e.target.value)}
+          className="border p-2 w-40"
+        >
           <option value="">Select Make</option>
-          {makes.map(m => <option key={m} value={m}>{m}</option>)}
+          {makes.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
         </select>
 
-        <select value={model} onChange={(e) => setModel(e.target.value)}
-                disabled={!make} className="border p-2 w-40">
+        <select
+          value={model}
+          onChange={(e) => setModel(e.target.value)}
+          disabled={!make}
+          className="border p-2 w-40"
+        >
           <option value="">Select Model</option>
-          {models.map(m => <option key={m} value={m}>{m}</option>)}
+          {models.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
         </select>
 
-        <select value={year} onChange={(e) => setYear(e.target.value)}
-                disabled={!model} className="border p-2 w-40">
+        <select
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          disabled={!model}
+          className="border p-2 w-40"
+        >
           <option value="">Select Year</option>
-          {years.map(y => <option key={y} value={y}>{y}</option>)}
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
         </select>
       </div>
       <div>
-        <Link to="/submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <Link
+          to="/submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
           Submit a Tutorial
         </Link>
       </div>
 
       {tutorials.length > 0 ? (
         <ul className="list-disc pl-6">
-          {tutorials.map(t => (
+          {tutorials.map((t) => (
             <li key={t.id} className="mb-2">
-              <Link to={`/tutorials/${t.id}`} className="text-blue-600 underline">
+              <Link
+                to={`/tutorials/${t.id}`}
+                className="text-blue-600 underline"
+              >
                 <strong>{t.title}</strong>
               </Link>
             </li>
