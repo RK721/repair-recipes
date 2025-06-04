@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function CreateTutorial() {
@@ -13,6 +13,50 @@ export default function CreateTutorial() {
     steps: [{ instruction: "" }],
   });
 
+  const [makes, setMakes] = useState([]);
+  const [models, setModels] = useState([]);
+  const [years, setYears] = useState([]);
+
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
+
+  const [duration, setDuration] = useState({ hours: "", minutes: "" });
+
+  // Load makes on initial render
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/vehicles/makes/")
+      .then((res) => setMakes(res.data))
+      .catch((err) => setError("Failed to load makes"));
+  }, []);
+
+  // Load models when make is selected
+  useEffect(() => {
+    if (make) {
+      axios
+        .get(`http://localhost:8000/vehicles/models/?make=${make}`)
+        .then((res) => setModels(res.data))
+        .catch((err) => setError("Failed to load models"));
+    }
+    setModel("");
+    setYear("");
+    setYears([]);
+  }, [make]);
+
+  // Load years when model is selected
+  useEffect(() => {
+    if (!(!make || !model)) {
+      axios
+        .get(
+          `http://localhost:8000/vehicles/years/?make=${make}&model=${model}`
+        )
+        .then((res) => setYears(res.data))
+        .catch((err) => setError("Failed to load years"));
+    }
+    setYear("");
+  }, [model]);
+
   const handleChange = (e, path) => {
     const [section, index, key] = path;
     const newForm = { ...form };
@@ -22,8 +66,20 @@ export default function CreateTutorial() {
       newForm[section][index][key] = e.target.value;
     }
     setForm(newForm);
-    console.clear();
-    console.log(form);
+  };
+
+  const handleDurationChange = (e) => {
+    const { name, value } = e.target;
+    setDuration({ ...duration, [name]: value });
+    // Optionally update form.estimated_time here if you want to keep it in sync
+
+    const h = parseInt(duration.hours);
+    const m = parseInt(duration.minutes);
+    const estimated_time = `${("0" + h).slice(-2)}:${("0" + m).slice(
+      -2
+    )}:00.000000`;
+
+    setForm({ ...form, estimated_time: estimated_time });
   };
 
   const addField = (section) => {
@@ -70,41 +126,107 @@ export default function CreateTutorial() {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Submit a Repair Tutorial</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex flex-wrap gap-4 0.5rem">
+          <select
+            value={make}
+            onChange={(e) => {
+              setMake(e.target.value);
+              handleChange(e, ["vehicle", null, "make"]);
+            }}
+            className="border p-2 w-40"
+            required
+          >
+            <option value="">Select Make</option>
+            {makes.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={model}
+            onChange={(e) => {
+              setModel(e.target.value);
+              handleChange(e, ["vehicle", null, "model"]);
+            }}
+            disabled={!make}
+            className="border p-2 w-40"
+            required
+          >
+            <option value="">Select Model</option>
+            {models.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={year}
+            onChange={(e) => {
+              setYear(e.target.value);
+              handleChange(e, ["vehicle", null, "year"]);
+            }}
+            disabled={!model}
+            className="border p-2 w-40"
+            required
+          >
+            <option value="">Select Year</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </div>
         <input
           className="w-full border p-2"
           placeholder="Title"
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
         />
         <textarea
           className="w-full border p-2"
           placeholder="Description"
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
+          required
         />
-        <input
-          className="w-full border p-2"
-          placeholder="Estimated Time"
-          value={form.estimated_time}
-          onChange={(e) => setForm({ ...form, estimated_time: e.target.value })}
-        />
+        <p>Estimate Time:</p>
+        <div className="flex gap-2 items-center">
+          <input
+            type="number"
+            min="0"
+            className="border p-2 w-20"
+            placeholder="Hours"
+            name="hours"
+            value={duration.hours}
+            onChange={handleDurationChange}
+            required
+          />
+          <span>Hours</span>
+          <input
+            type="number"
+            min="0"
+            max="59"
+            className="border p-2 w-20"
+            placeholder="Minutes"
+            name="minutes"
+            value={duration.minutes}
+            onChange={handleDurationChange}
+            required
+          />
+          <span>Minutes</span>
+        </div>
         <input
           className="w-full border p-2"
           placeholder="Difficulty"
           value={form.difficulty}
           onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
+          required
         />
-
-        <h2 className="text-xl font-semibold">Vehicle</h2>
-        {["year", "make", "model", "engine", "trim"].map((field) => (
-          <input
-            key={field}
-            className="w-full border p-2"
-            placeholder={field}
-            value={form.vehicle[field]}
-            onChange={(e) => handleChange(e, ["vehicle", null, field])}
-          />
-        ))}
 
         <h2 className="text-xl font-semibold">Tools</h2>
         {form.tools.map((tool, i) => (
@@ -114,6 +236,7 @@ export default function CreateTutorial() {
               placeholder="Name"
               value={tool.name}
               onChange={(e) => handleChange(e, ["tools", i, "name"])}
+              required
             />
             <input
               className="w-full border p-2"
@@ -139,12 +262,14 @@ export default function CreateTutorial() {
               placeholder="Name"
               value={part.name}
               onChange={(e) => handleChange(e, ["parts", i, "name"])}
+              required
             />
             <input
               className="w-full border p-2"
               placeholder="Part Number"
               value={part.part_number}
               onChange={(e) => handleChange(e, ["parts", i, "part_number"])}
+              required
             />
             <input
               className="w-full border p-2"

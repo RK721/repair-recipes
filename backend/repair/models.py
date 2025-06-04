@@ -30,7 +30,7 @@ class Tutorial(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
-    estimated_time = models.CharField(max_length=50)
+    estimated_time = models.DurationField()
     difficulty = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     tools = models.ManyToManyField(Tool, blank=True)

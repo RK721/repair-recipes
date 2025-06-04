@@ -25,7 +25,6 @@ export default function App() {
 
   // Load models when make is selected
   useEffect(() => {
-    console.log("Selected make:", make);
     if (make) {
       axios
         .get(`http://localhost:8000/vehicles/models/?make=${make}`)
