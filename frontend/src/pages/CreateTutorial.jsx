@@ -73,8 +73,16 @@ export default function CreateTutorial() {
     setDuration({ ...duration, [name]: value });
     // Optionally update form.estimated_time here if you want to keep it in sync
 
-    const h = parseInt(duration.hours);
-    const m = parseInt(duration.minutes);
+    let h = 0;
+    let m = 0;
+    if (e.target.name == "minutes") {
+      h = parseInt(duration.hours);
+      m = parseInt(e.target.value);
+    } else {
+      h = parseInt(e.target.value);
+      m = parseInt(duration.minutes);
+    }
+    console.log(m);
     const estimated_time = `${("0" + h).slice(-2)}:${("0" + m).slice(
       -2
     )}:00.000000`;
@@ -194,7 +202,7 @@ export default function CreateTutorial() {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           required
         />
-        <p>Estimate Time:</p>
+        <p>Estimated Time:</p>
         <div className="flex gap-2 items-center">
           <input
             type="number"
@@ -220,13 +228,20 @@ export default function CreateTutorial() {
           />
           <span>Minutes</span>
         </div>
-        <input
-          className="w-full border p-2"
-          placeholder="Difficulty"
+        <p>Difficulty:</p>
+        <select
           value={form.difficulty}
-          onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
+          onChange={(e) => {
+            setForm({ ...form, difficulty: e.target.value });
+          }}
+          className="border p-2 w-40"
           required
-        />
+        >
+          <option value="">-</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
 
         <h2 className="text-xl font-semibold">Tools</h2>
         {form.tools.map((tool, i) => (
@@ -301,7 +316,7 @@ export default function CreateTutorial() {
         <button
           type="button"
           onClick={() => addField("steps")}
-          className="text-blue-500 underline"
+          className="text-blue-500 underline p-2"
         >
           + Add Step
         </button>

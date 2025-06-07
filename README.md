@@ -19,7 +19,7 @@ cd repair-recipes/backend
 
 ```powershell
 python -m venv venv
-venv\Scripts\Activate.ps1
+venv\Scripts\activate
 ```
 
 3. **Install dependencies**
@@ -42,4 +42,13 @@ python manage.py runserver
 - Create Tutorial: `POST http://127.0.0.1:8000/tutorials/create/`
 
 6. **(Optional)** Add test data through the Django admin at `http://127.0.0.1:8000/admin/`
+
+7. **Start Fronted**
+```new powershell
+cd frontend
+npm install
+npm run dev
+``` 
+
+
 """
