@@ -1,15 +1,24 @@
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Vehicle, Tutorial
-from .serializers import TutorialSerializer
+from .serializers import TutorialSerializer, UserSerializer
+from django.contrib.auth.models import User
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
 class MakeListView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         makes = Vehicle.objects.values_list('make', flat=True).distinct()
         return Response(sorted(set(makes)))
 
 class ModelListView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         make = request.query_params.get('make')
         if not make:
@@ -18,6 +27,7 @@ class ModelListView(APIView):
         return Response(sorted(set(models)))
     
 class YearListView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         make = request.query_params.get('make')
         model = request.query_params.get('model')
@@ -28,6 +38,7 @@ class YearListView(APIView):
 
 class TutorialListAPIView(generics.ListAPIView):
     serializer_class = TutorialSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         queryset = Tutorial.objects.all()
@@ -47,10 +58,15 @@ class TutorialListAPIView(generics.ListAPIView):
 class TutorialDetailAPIView(generics.RetrieveAPIView):
     queryset = Tutorial.objects.all()
     serializer_class = TutorialSerializer
+    permission_classes = [AllowAny]
 
 class TutorialCreateAPIView(generics.CreateAPIView):
-    queryset = Tutorial.objects.all()
     serializer_class = TutorialSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Tutorial.objects.filter(author=user)
 
     def post(self, request, *args, **kwargs):
         print("REQUEST DATA:", request.data)
@@ -62,3 +78,11 @@ class TutorialCreateAPIView(generics.CreateAPIView):
         else:
             print("SERIALIZER ERRORS:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class TutorialDestroyAPIView(generics.DestroyAPIView):
+    serializer_class = TutorialSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Tutorial.objects.filter(author=user)
