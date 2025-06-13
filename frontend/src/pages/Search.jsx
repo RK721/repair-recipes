@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-function Home() {
+function Search() {
   return (
     <div>
       {/* Header */}
@@ -181,4 +181,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Search;

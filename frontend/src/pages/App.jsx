@@ -3,21 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./Login";
-import Home from "./Home";
-import Register from "./Register";
-import NotFound from "./NotFound";
-import ProtectedRoute from "../components/ProtectedRoute";
-
-function Logout() {
-  localStorage.clear();
-  return <Navigate to="/login"></Navigate>;
-}
-
-function RegisterAndLogout() {
-  localStorage.clear();
-  return <Register />;
-}
 
 export default function App() {
   const [makes, setMakes] = useState([]);
