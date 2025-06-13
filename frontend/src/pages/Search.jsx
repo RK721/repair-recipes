@@ -1,184 +1,189 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-function Search() {
+export default function Search() {
+  const [makes, setMakes] = useState([]);
+  const [models, setModels] = useState([]);
+  const [years, setYears] = useState([]);
+
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
+
+  const [tutorials, setTutorials] = useState([]);
+  const [error, setError] = useState(null);
+
+  // Load makes on initial render
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/vehicles/makes/")
+      .then((res) => setMakes(res.data))
+      .catch(() => setError("Failed to load makes"));
+  }, []);
+
+  // Load models when make is selected
+  useEffect(() => {
+    if (make) {
+      axios
+        .get(`http://localhost:8000/vehicles/models/?make=${make}`)
+        .then((res) => setModels(res.data))
+        .catch(() => setError("Failed to load models"));
+    }
+    setModel("");
+    setYear("");
+    setYears([]);
+    setTutorials([]);
+  }, [make]);
+
+  // Load years when model is selected
+  useEffect(() => {
+    if (make && model) {
+      axios
+        .get(
+          `http://localhost:8000/vehicles/years/?make=${make}&model=${model}`
+        )
+        .then((res) => setYears(res.data))
+        .catch(() => setError("Failed to load years"));
+    }
+    setYear("");
+    setTutorials([]);
+  }, [model, make]);
+
+  // Load tutorials when year is selected
+  useEffect(() => {
+    if (!make || !model || !year) return;
+    axios
+      .get(
+        `http://localhost:8000/tutorials/?make=${make}&model=${model}&year=${year}`
+      )
+      .then((res) => setTutorials(res.data))
+      .catch(() => setError("Failed to load tutorials"));
+  }, [year, make, model]);
+
   return (
-    <div>
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white shadow">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🧰</span>
-          <span className="font-bold text-xl tracking-tight">
-            REPAIRRECIPES.IO
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2 text-center">
+        Find Repair Tutorials for Your Vehicle
+      </h1>
+      <p className="text-lg text-gray-700 mb-8 text-center">
+        Choose your car below to see step-by-step repair guides written by real
+        people.
+      </p>
+
+      {error && <p className="text-red-600 mb-4">{error}</p>}
+
+      <form
+        className="flex flex-wrap gap-4 mb-8 justify-center items-end bg-white rounded shadow p-6"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="make">
+            Make
+          </label>
+          <select
+            id="make"
+            value={make}
+            onChange={(e) => setMake(e.target.value)}
+            className="border p-2 w-40 rounded"
+          >
+            <option value="">Select Make</option>
+            {makes.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="model">
+            Model
+          </label>
+          <select
+            id="model"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            disabled={!make}
+            className="border p-2 w-40 rounded bg-gray-100 disabled:opacity-60"
+          >
+            <option value="">Select Model</option>
+            {models.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold" htmlFor="year">
+            Year
+          </label>
+          <select
+            id="year"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            disabled={!model}
+            className="border p-2 w-40 rounded bg-gray-100 disabled:opacity-60"
+          >
+            <option value="">Select Year</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </div>
+      </form>
+
+      {make && model && year && (
+        <div className="mb-8 text-center">
+          <span className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded font-semibold">
+            Showing results for: {year} {make} {model}
           </span>
         </div>
-        <nav className="flex items-center gap-6">
-          <Link to="/" className="hover:underline">
-            Home
-          </Link>
-          <Link to="/search" className="hover:underline">
-            Search
-          </Link>
-          <Link to="/submit" className="hover:underline">
-            Submit Tutorial
-          </Link>
-          <Link to="/login" className="hover:underline">
-            Login / Sign Up
-          </Link>
-        </nav>
-      </header>
+      )}
 
-      {/* Hero Section */}
-      <section className="flex flex-col items-center text-center py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
-        <h1 className="text-4xl font-extrabold mb-4">
-          Fix Any Car, One Step at a Time
-        </h1>
-        <p className="text-lg mb-6 max-w-2xl">
-          Search, share, and follow repair tutorials written like recipes.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <Link
-            to="/search"
-            className="bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700 transition"
-          >
-            🔍 Start Searching
-          </Link>
-          <Link
-            to="/submit"
-            className="bg-green-600 text-white px-6 py-3 rounded font-semibold hover:bg-green-700 transition"
-          >
-            📤 Submit a Tutorial
-          </Link>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-8 text-left max-w-3xl mx-auto">
-          <div>
-            <h2 className="font-bold text-lg mb-2">🔧 For DIYers</h2>
-            <p>Easy, step-by-step guides tailored to your car</p>
+      {tutorials.length > 0 ? (
+        <ul className="space-y-4">
+          {tutorials.map((t) => (
+            <li key={t.id} className="bg-white rounded shadow p-4">
+              <Link
+                to={`/tutorials/${t.id}`}
+                className="text-blue-700 font-bold text-lg hover:underline"
+              >
+                {t.title}
+              </Link>
+              {t.description && (
+                <p className="text-gray-700 mt-1">{t.description}</p>
+              )}
+              <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+                {t.estimated_time && (
+                  <span>
+                    🕒 {t.estimated_time.replace("PT", "").toLowerCase()}
+                  </span>
+                )}
+                {t.difficulty && <span>⭐ {t.difficulty}</span>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        make &&
+        model &&
+        year && (
+          <div className="text-center text-gray-500 mt-8">
+            <p>No tutorials found for this vehicle.</p>
+            <Link
+              to="/submit"
+              className="inline-block mt-2 text-blue-600 underline"
+            >
+              Be the first to submit one!
+            </Link>
           </div>
-          <div>
-            <h2 className="font-bold text-lg mb-2">🛠️ For Mechanics</h2>
-            <p>Share your knowledge and get rewarded</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-12 px-4 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">
-          🔍 Search That Actually Works
-        </h2>
-        <ul className="list-disc pl-6 mb-6 text-gray-700">
-          <li>Choose Year, Make, Model</li>
-          <li>See only relevant tutorials</li>
-          <li>Step-by-step, like following a cooking recipe</li>
-        </ul>
-        <p className="mb-8 font-semibold text-blue-700">
-          🎯 Get straight to the fix — no noise.
-        </p>
-
-        <h2 className="text-2xl font-bold mb-4">🧠 Tutorials by Real People</h2>
-        <ul className="list-disc pl-6 mb-6 text-gray-700">
-          <li>✅ Tools and parts you’ll need (with links)</li>
-          <li>🕒 Estimated time & difficulty</li>
-          <li>📸 Optional photos and step images</li>
-          <li>📘 Clear, structured steps you can follow in your garage</li>
-        </ul>
-        <blockquote className="italic border-l-4 border-blue-400 pl-4 mb-8">
-          ⭐ “It’s like AllRecipes, but for car repairs.” — Beta tester
-        </blockquote>
-
-        <h2 className="text-2xl font-bold mb-4">
-          👨‍🔧 Are You a Mechanic or DIY Pro?
-        </h2>
-        <p className="mb-2">
-          Your knowledge is valuable. Turn your experience into reach,
-          recognition, and revenue:
-        </p>
-        <ul className="list-disc pl-6 mb-6 text-gray-700">
-          <li>🔧 Submit tutorials in minutes</li>
-          <li>🌟 Get featured and ranked</li>
-          <li>💵 Add affiliate links to your favorite tools</li>
-          <li>🎁 Earn rewards for most helpful content</li>
-        </ul>
-        <Link
-          to="/signup"
-          className="bg-yellow-500 text-white px-6 py-3 rounded font-semibold hover:bg-yellow-600 transition mb-8 inline-block"
-        >
-          Become a Contributor
-        </Link>
-
-        <h2 className="text-2xl font-bold mb-4">🧭 How It Works</h2>
-        <ul className="list-disc pl-6 mb-6 text-gray-700">
-          <li>Search or browse repairs for your car</li>
-          <li>Follow step-by-step guides with confidence</li>
-          <li>Submit your own fixes to help others and earn</li>
-        </ul>
-        <p className="mb-8">Built by car people. For car people.</p>
-
-        <h2 className="text-2xl font-bold mb-4">
-          💸 Coming Soon: Rewards Program
-        </h2>
-        <p className="mb-2">
-          We're building the first repair content platform where:
-        </p>
-        <ul className="list-disc pl-6 mb-6 text-gray-700">
-          <li>Contributors keep control</li>
-          <li>Viewers get real value</li>
-          <li>Everyone wins</li>
-        </ul>
-        <p className="mb-8">
-          🔜 Ad revenue, affiliate revenue, and tool giveaways for top creators.
-        </p>
-      </section>
-
-      {/* Call to Action */}
-      <section className="flex flex-col sm:flex-row gap-4 justify-center items-center py-8 bg-blue-50">
-        <span className="font-bold text-lg mb-2 sm:mb-0">
-          Try the Beta Now — It’s Free
-        </span>
-        <Link
-          to="/search"
-          className="bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700 transition"
-        >
-          🔍 Explore Tutorials
-        </Link>
-        <Link
-          to="/submit"
-          className="bg-green-600 text-white px-6 py-3 rounded font-semibold hover:bg-green-700 transition"
-        >
-          📤 Submit a Tutorial
-        </Link>
-      </section>
-
-      {/* Footer */}
-      <footer className="mt-auto py-6 px-4 bg-gray-100 text-center text-gray-600 text-sm">
-        <div className="mb-2">
-          © 2025 RepairRecipes.io &mdash; Built by gearheads | Powered by
-          community
-        </div>
-        <div className="flex justify-center gap-4">
-          <Link to="/about" className="hover:underline">
-            About
-          </Link>
-          <Link to="/contact" className="hover:underline">
-            Contact
-          </Link>
-          <Link to="/privacy" className="hover:underline">
-            Privacy Policy
-          </Link>
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
-            GitHub
-          </a>
-        </div>
-      </footer>
+        )
+      )}
     </div>
   );
 }
-
-export default Search;

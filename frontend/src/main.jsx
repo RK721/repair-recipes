@@ -7,9 +7,11 @@ import CreateTutorial from "./pages/CreateTutorial";
 import "./index.css";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Search from "./pages/Search";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
 
 function Logout() {
   localStorage.clear();
@@ -25,21 +27,72 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tutorials/:id" element={<TutorialDetail />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/search" element={<App />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
+        <Route
+          path="/tutorials/:id"
+          element={
+            <Layout>
+              <TutorialDetail />
+            </Layout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Layout>
+              <Login />
+            </Layout>
+          }
+        />
+        <Route
+          path="/logout"
+          element={
+            <Layout>
+              <Logout />
+            </Layout>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <Layout>
+              <Search />
+            </Layout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Layout>
+              <RegisterAndLogout />
+            </Layout>
+          }
+        />
         <Route
           path="/submit"
           element={
             <ProtectedRoute>
-              <CreateTutorial />
+              <Layout>
+                <CreateTutorial />
+              </Layout>
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <NotFound />
+            </Layout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

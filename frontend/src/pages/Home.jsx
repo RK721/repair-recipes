@@ -5,30 +5,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 function Home() {
   return (
     <div>
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white shadow">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🧰</span>
-          <span className="font-bold text-xl tracking-tight">
-            REPAIRRECIPES.IO
-          </span>
-        </div>
-        <nav className="flex items-center gap-6">
-          <Link to="/" className="hover:underline">
-            Home
-          </Link>
-          <Link to="/search" className="hover:underline">
-            Search
-          </Link>
-          <Link to="/submit" className="hover:underline">
-            Submit Tutorial
-          </Link>
-          <Link to="/login" className="hover:underline">
-            Login / Sign Up
-          </Link>
-        </nav>
-      </header>
-
       {/* Hero Section */}
       <section className="flex flex-col items-center text-center py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
         <h1 className="text-4xl font-extrabold mb-4">
@@ -150,33 +126,6 @@ function Home() {
           📤 Submit a Tutorial
         </Link>
       </section>
-
-      {/* Footer */}
-      <footer className="mt-auto py-6 px-4 bg-gray-100 text-center text-gray-600 text-sm">
-        <div className="mb-2">
-          © 2025 RepairRecipes.io &mdash; Built by gearheads | Powered by
-          community
-        </div>
-        <div className="flex justify-center gap-4">
-          <Link to="/about" className="hover:underline">
-            About
-          </Link>
-          <Link to="/contact" className="hover:underline">
-            Contact
-          </Link>
-          <Link to="/privacy" className="hover:underline">
-            Privacy Policy
-          </Link>
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
-            GitHub
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }
