@@ -120,14 +120,6 @@ export default function Layout({ children }) {
           <Link to="/privacy" className="hover:underline">
             Privacy Policy
           </Link>
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
-            GitHub
-          </a>
         </div>
       </footer>
     </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
-import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, USERNAME } from "../constants";
 import { useState, useEffect } from "react";
 
 function ProtectedRoute({ children }) {
@@ -20,7 +20,7 @@ function ProtectedRoute({ children }) {
       const res = await api.post("/api/token/refresh/", {
         refresh: refreshToken,
       });
-      if (res === 200) {
+      if (res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         setIsAuthorized(true);
       } else {

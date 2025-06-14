@@ -78,7 +78,7 @@ function Home() {
           <li>🎁 Earn rewards for most helpful content</li>
         </ul>
         <Link
-          to="/signup"
+          to="/submit"
           className="bg-yellow-500 text-white px-6 py-3 rounded font-semibold hover:bg-yellow-600 transition mb-8 inline-block"
         >
           Become a Contributor

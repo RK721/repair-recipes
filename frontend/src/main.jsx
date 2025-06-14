@@ -16,6 +16,9 @@ import Profile from "./pages/Profile";
 import MyTutorials from "./pages/MyTutorials";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function Logout() {
   localStorage.clear();
@@ -120,6 +123,30 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           element={
             <Layout>
               <ResetPassword />
+            </Layout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <About />
+            </Layout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <Layout>
+              <Contact />
+            </Layout>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <Layout>
+              <PrivacyPolicy />
             </Layout>
           }
         />
