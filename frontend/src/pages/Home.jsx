@@ -47,7 +47,7 @@ function Home() {
         <ul className="list-disc pl-6 mb-6 text-gray-700">
           <li>Choose Year, Make, Model</li>
           <li>See only relevant tutorials</li>
-          <li>Step-by-step, like following a cooking recipe</li>
+          <li>Step-by-step, like following a recipe or building Legos</li>
         </ul>
         <p className="mb-8 font-semibold text-blue-700">
           🎯 Get straight to the fix — no noise.

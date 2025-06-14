@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Write2RepairV1.png";
 import { USERNAME } from "../constants";
 
@@ -8,6 +8,7 @@ export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const updateUsername = () => setUsername(localStorage.getItem(USERNAME));
@@ -88,7 +89,12 @@ export default function Layout({ children }) {
               )}
             </div>
           ) : (
-            <Link to="/login" className="hover:underline">
+            <Link
+              to="/login"
+              state={{ from: location }}
+              replace
+              className="hover:underline"
+            >
               Login / Sign Up
             </Link>
           )}

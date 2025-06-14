@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../api";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN, USERNAME } from "../constants";
 import "../styles/Form.css";
 import LoadingIndicator from "./LoadingIndicator";
@@ -14,6 +14,7 @@ function Form({ route, method }) {
   const [showRegisterLink, setShowRegisterLink] = useState(false);
   const [showLoginLink, setShowLoginLink] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const name = method === "login" ? "Login" : "Register";
 
@@ -38,20 +39,13 @@ function Form({ route, method }) {
 
     try {
       const res = await api.post(route, { username, password, email });
-      if (method === "login") {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        localStorage.setItem(USERNAME, username);
-        window.dispatchEvent(new Event("username-updated"));
-        navigate("/"); // Change this to ultimately return to wherever the user came from
-      } else {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        localStorage.setItem(USERNAME, username);
-        window.dispatchEvent(new Event("username-updated"));
-        navigate("/"); // Change this to ultimately return to wherever the user came from
-        //navigate("/login"); // This maybe shouldn't be this way, it should probably also take the user to where they came from
-      }
+      localStorage.setItem(ACCESS_TOKEN, res.data.access);
+      localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+      localStorage.setItem(USERNAME, username);
+      window.dispatchEvent(new Event("username-updated"));
+      // Redirect to previous page or home
+      const redirectTo = location.state?.from?.pathname || "/";
+      navigate(redirectTo, { replace: true });
     } catch (error) {
       // Try to parse error response
       let msg = "An error occurred.";
