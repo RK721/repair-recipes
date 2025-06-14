@@ -12,6 +12,10 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import Profile from "./pages/Profile";
+import MyTutorials from "./pages/MyTutorials";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function Logout() {
   localStorage.clear();
@@ -83,6 +87,40 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 <CreateTutorial />
               </Layout>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <Layout>
+              <ForgotPassword />
+            </Layout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-tutorials"
+          element={
+            <Layout>
+              <MyTutorials />
+            </Layout>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <Layout>
+              <ResetPassword />
+            </Layout>
           }
         />
         <Route

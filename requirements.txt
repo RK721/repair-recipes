@@ -5,6 +5,8 @@ django-cors-headers
 djangorestframework-simplejwt
 PyJWT
 python-dotenv
+requests
+django-rest-passwordreset
 
 asgiref
 pytz

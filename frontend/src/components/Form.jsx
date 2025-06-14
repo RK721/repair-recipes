@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, USERNAME } from "../constants";
 import "../styles/Form.css";
 import LoadingIndicator from "./LoadingIndicator";
 
@@ -41,9 +41,16 @@ function Form({ route, method }) {
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        localStorage.setItem(USERNAME, username);
+        window.dispatchEvent(new Event("username-updated"));
         navigate("/"); // Change this to ultimately return to wherever the user came from
       } else {
-        navigate("/login"); // This maybe shouldn't be this way, it should probably also take the user to where they came from
+        localStorage.setItem(ACCESS_TOKEN, res.data.access);
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        localStorage.setItem(USERNAME, username);
+        window.dispatchEvent(new Event("username-updated"));
+        navigate("/"); // Change this to ultimately return to wherever the user came from
+        //navigate("/login"); // This maybe shouldn't be this way, it should probably also take the user to where they came from
       }
     } catch (error) {
       // Try to parse error response
@@ -131,6 +138,13 @@ function Form({ route, method }) {
         <div className="mb-2 text-yellow-700 text-xs">
           Password must be at least 8 characters and include a letter and a
           number.
+        </div>
+      )}
+      {method === "login" && (
+        <div className="mt-2 text-sm text-right w-full">
+          <Link to="/forgot-password" className="text-blue-600 underline">
+            Forgot password?
+          </Link>
         </div>
       )}
       {loading && <LoadingIndicator />}
