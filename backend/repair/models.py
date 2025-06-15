@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+def upload_to(instance, filename):
+    return 'steps/{filename}'.format(filename=filename)
+
 class Vehicle(models.Model):
     year = models.IntegerField()
     make = models.CharField(max_length=100)
@@ -44,7 +47,7 @@ class Step(models.Model):
     tutorial = models.ForeignKey(Tutorial, related_name='steps', on_delete=models.CASCADE)
     step_number = models.IntegerField()
     instruction = models.TextField()
-    #image = models.ImageField(upload_to='steps/', blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     def __str__(self):
         return f"Step {self.step_number} of {self.tutorial.title}"

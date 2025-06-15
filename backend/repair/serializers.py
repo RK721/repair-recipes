@@ -28,9 +28,10 @@ class PartSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class StepSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
     class Meta:
         model = Step
-        fields = ['step_number', 'instruction']
+        fields = ['step_number', 'instruction', 'image']
 
 class TutorialSerializer(serializers.ModelSerializer):
     vehicle = VehicleSerializer()

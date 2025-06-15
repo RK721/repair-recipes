@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+const MEDIA_URL = "http://localhost:8000/media/";
+
 export default function TutorialDetail() {
   const { id } = useParams();
   const [tutorial, setTutorial] = useState(null);
@@ -35,6 +37,7 @@ export default function TutorialDetail() {
                   href={tool.affiliate_link}
                   className="text-blue-600 underline"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Buy
                 </a>
@@ -57,6 +60,7 @@ export default function TutorialDetail() {
                   href={part.affiliate_link}
                   className="text-blue-600 underline"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Buy
                 </a>
@@ -68,9 +72,20 @@ export default function TutorialDetail() {
 
       <h2 className="mt-6 text-lg font-semibold">Steps</h2>
       <ol className="list-decimal pl-6">
-        {tutorial.steps.map((step) => (
-          <li key={step.id} className="mb-4">
-            <p>{step.instruction}</p>
+        {tutorial.steps.map((step, idx) => (
+          <li key={step.id || idx} className="mb-6">
+            <p className="mb-2">{step.instruction}</p>
+            {step.image && (
+              <img
+                src={
+                  step.image.startsWith("http")
+                    ? step.image
+                    : MEDIA_URL + step.image
+                }
+                alt={`Step ${step.step_number} illustration`}
+                className="max-w-xs rounded border mb-2"
+              />
+            )}
           </li>
         ))}
       </ol>

@@ -2,9 +2,11 @@ from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Vehicle, Tutorial
 from .serializers import TutorialSerializer, UserSerializer
 from django.contrib.auth.models import User
+import json
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -89,6 +91,7 @@ class TutorialDetailAPIView(generics.RetrieveAPIView):
 
 class TutorialCreateAPIView(generics.CreateAPIView):
     serializer_class = TutorialSerializer
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -96,9 +99,39 @@ class TutorialCreateAPIView(generics.CreateAPIView):
         return Tutorial.objects.filter(author=user)
 
     def post(self, request, *args, **kwargs):
-        print("REQUEST DATA:", request.data)
+        data = dict(request.data)
+        # Parse JSON fields
+        for field in ["tools", "parts", "steps"]:
+            if field in data and isinstance(data[field], list) and len(data[field]) == 1:
+                try:
+                    data[field] = json.loads(data[field][0])
+                except Exception:
+                    data[field] = []
+        # Flatten vehicle fields
+        vehicle = {}
+        for key in ["year", "make", "model", "engine", "trim"]:
+            vkey = f"vehicle.{key}"
+            if vkey in data:
+                vehicle[key] = data.pop(vkey)[0] if isinstance(data[vkey], list) else data.pop(vkey)
+        data["vehicle"] = vehicle
+
+        # Flatten all other single-item lists to their value
+        for key in list(data.keys()):
+            if key not in ["tools", "parts", "steps", "vehicle"]:
+                if isinstance(data[key], list) and len(data[key]) == 1:
+                    data[key] = data[key][0]
+
+        # Attach images to steps
+        steps = data.get("steps", [])
+        for i, step in enumerate(steps):
+            image_field = f"step_images_{i}"
+            if image_field in request.FILES:
+                step["image"] = request.FILES[image_field]
+        data["steps"] = steps
+
+        print("REQUEST DATA:", data)
         print("FILES:", request.FILES)
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             serializer.save(author=request.user if request.user.is_authenticated else None)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

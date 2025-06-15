@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ACCESS_TOKEN } from "../constants";
 import axios from "axios";
 
 export default function CreateTutorial() {
@@ -104,57 +105,53 @@ export default function CreateTutorial() {
     }
   };
 
+  const handleStepFileChange = (e, idx, type) => {
+    const file = e.target.files[0];
+    const newSteps = [...form.steps];
+    newSteps[idx][type] = file;
+    setForm({ ...form, steps: newSteps });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
-    // Basic validation
-    if (
-      !form.title ||
-      !form.description ||
-      !form.estimated_time ||
-      !form.difficulty
-    ) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-    if (!form.vehicle.make || !form.vehicle.model || !form.vehicle.year) {
-      setError("Please select a vehicle (make, model, year).");
-      return;
-    }
-    if (form.steps.length === 0 || !form.steps[0].instruction.trim()) {
-      setError("Please add at least one step.");
-      return;
-    }
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("estimated_time", form.estimated_time);
+    formData.append("difficulty", form.difficulty);
 
-    const payload = {
-      ...form,
-      steps: form.steps.map((step, i) => ({
-        step_number: i + 1,
-        instruction: step.instruction,
-      })),
-    };
+    // Vehicle fields
+    Object.entries(form.vehicle).forEach(([key, value]) => {
+      formData.append(`vehicle.${key}`, value);
+    });
+
+    // Send tools, parts, steps as JSON strings
+    formData.append("tools", JSON.stringify(form.tools));
+    formData.append("parts", JSON.stringify(form.parts));
+    // For steps, temporarily remove files, then add files separately
+    const stepsNoFiles = form.steps.map(({ image, ...rest }, i) => ({
+      ...rest,
+      step_number: i + 1,
+    }));
+    formData.append("steps", JSON.stringify(stepsNoFiles));
+
+    // Attach files for steps
+    form.steps.forEach((step, i) => {
+      if (step.image) formData.append(`step_images_${i}`, step.image);
+    });
 
     try {
-      await axios.post("http://localhost:8000/tutorials/create/", payload, {
-        headers: { "Content-Type": "application/json" },
+      await axios.post("http://localhost:8000/tutorials/create/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+        },
       });
       setSuccess("Tutorial submitted! Thank you for contributing.");
-      setForm({
-        title: "",
-        description: "",
-        estimated_time: "",
-        difficulty: "",
-        vehicle: { year: "", make: "", model: "", engine: "", trim: "" },
-        tools: [{ name: "", affiliate_link: "" }],
-        parts: [{ name: "", part_number: "", affiliate_link: "" }],
-        steps: [{ instruction: "" }],
-      });
-      setMake("");
-      setModel("");
-      setYear("");
-      setDuration({ hours: "", minutes: "" });
+      // ...reset form...
     } catch (err) {
       setError(
         err.response?.data?.detail ||
@@ -410,15 +407,33 @@ export default function CreateTutorial() {
         <div>
           <h2 className="text-xl font-semibold mb-2">Steps</h2>
           {form.steps.map((step, i) => (
-            <div key={i} className="flex gap-2 mb-2 items-start">
+            <div key={i} className="flex-1 flex flex-col">
               <textarea
-                className="flex-1 border p-2 rounded"
-                placeholder={`Step ${i + 1} instruction`}
+                className="border p-2 rounded resize-vertical min-h-[60px] mb-2"
+                placeholder={`Describe what to do in step ${i + 1}...`}
                 value={step.instruction}
                 onChange={(e) => handleChange(e, ["steps", i, "instruction"])}
                 required
                 rows={2}
               />
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleStepFileChange(e, i, "image")}
+                    className="block w-full text-sm text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700"
+                  />
+                  {step.image && (
+                    <span className="text-xs text-green-700 block mt-1">
+                      {step.image.name}
+                    </span>
+                  )}
+                </div>
+              </div>
               {form.steps.length > 1 && (
                 <button
                   type="button"
