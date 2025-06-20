@@ -7,8 +7,8 @@ PyJWT
 python-dotenv
 requests
 django-rest-passwordreset
+psycopg2-binary
 
 asgiref
 pytz
 sqlparse
-psycopg2-binary
