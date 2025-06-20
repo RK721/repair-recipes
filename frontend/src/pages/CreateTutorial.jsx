@@ -307,9 +307,9 @@ export default function CreateTutorial() {
               required
             >
               <option value="">Select</option>
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Expert">Expert</option>
             </select>
           </div>
         </div>
