@@ -24,7 +24,10 @@ export default function Layout({ children }) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
         setMobileMenuOpen(false);
       }
     }
@@ -57,7 +60,11 @@ export default function Layout({ children }) {
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-2">
-                <img src={logo} alt="Write2Repair Logo" className="h-8 w-auto sm:h-10" />
+                <img
+                  src={logo}
+                  alt="Write2Repair Logo"
+                  className="h-8 w-auto sm:h-10"
+                />
               </Link>
             </div>
 
@@ -95,7 +102,12 @@ export default function Layout({ children }) {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
                   {menuOpen && (
@@ -106,8 +118,18 @@ export default function Layout({ children }) {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                           onClick={() => setMenuOpen(false)}
                         >
-                          <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <svg
+                            className="w-4 h-4 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
                           </svg>
                           Profile
                         </Link>
@@ -116,8 +138,18 @@ export default function Layout({ children }) {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                           onClick={() => setMenuOpen(false)}
                         >
-                          <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          <svg
+                            className="w-4 h-4 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
                           </svg>
                           My Tutorials
                         </Link>
@@ -126,8 +158,18 @@ export default function Layout({ children }) {
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
                         >
-                          <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          <svg
+                            className="w-4 h-4 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            />
                           </svg>
                           Logout
                         </button>
@@ -159,7 +201,12 @@ export default function Layout({ children }) {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
                 <svg
                   className={`${mobileMenuOpen ? "block" : "hidden"} h-6 w-6`}
@@ -167,7 +214,12 @@ export default function Layout({ children }) {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -195,7 +247,9 @@ export default function Layout({ children }) {
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-semibold mr-3">
                       {username.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-sm font-medium text-gray-700">{username}</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {username}
+                    </span>
                   </div>
                   <Link
                     to="/profile"
@@ -242,41 +296,65 @@ export default function Layout({ children }) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
-              <img src={logo} alt="Write2Repair Logo" className="h-8 w-auto mb-4" />
+              <img
+                src={logo}
+                alt="Write2Repair Logo"
+                className="h-8 w-auto mb-4"
+              />
               <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-                Built by gearheads, for gearheads. Share your automotive knowledge and help others fix their vehicles with confidence.
+                Built by gearheads, for gearheads. Share your automotive
+                knowledge and help others fix their vehicles with confidence.
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Company</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Company
+              </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/about" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  <Link
+                    to="/about"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  >
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  <Link
+                    to="/contact"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  >
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  <Link
+                    to="/privacy"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Platform</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Platform
+              </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/search" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  <Link
+                    to="/search"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  >
                     Search Tutorials
                   </Link>
                 </li>
                 <li>
-                  <Link to="/submit" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  <Link
+                    to="/submit"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                  >
                     Submit Tutorial
                   </Link>
                 </li>

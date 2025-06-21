@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 /**
  * Content Page Template
- * 
+ *
  * A reusable template for content-heavy pages with:
  * - Hero section with title and description
  * - Main content area with sidebar support
  * - Responsive layout
  * - Consistent styling
- * 
+ *
  * Usage:
  * <ContentPageTemplate
  *   title="Page Title"
@@ -28,7 +28,7 @@ export default function ContentPageTemplate({
   sidebar = null,
   children,
   heroBackground = "bg-gradient-to-br from-blue-50 to-indigo-50",
-  className = ""
+  className = "",
 }) {
   return (
     <div className={`min-h-screen bg-gray-50 ${className}`}>
@@ -38,22 +38,37 @@ export default function ContentPageTemplate({
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb Navigation */}
             {breadcrumbs.length > 0 && (
-              <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
+              <nav
+                className="flex items-center space-x-2 text-sm text-gray-600 mb-6"
+                aria-label="Breadcrumb"
+              >
                 {breadcrumbs.map((crumb, index) => (
                   <React.Fragment key={index}>
                     {crumb.to ? (
-                      <Link 
-                        to={crumb.to} 
+                      <Link
+                        to={crumb.to}
                         className="hover:text-blue-600 transition-colors duration-200"
                       >
                         {crumb.label}
                       </Link>
                     ) : (
-                      <span className="text-gray-900 font-medium">{crumb.label}</span>
+                      <span className="text-gray-900 font-medium">
+                        {crumb.label}
+                      </span>
                     )}
                     {index < breadcrumbs.length - 1 && (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     )}
                   </React.Fragment>
@@ -79,17 +94,23 @@ export default function ContentPageTemplate({
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-6xl mx-auto">
-          <div className={`grid gap-8 ${sidebar ? 'grid-cols-1 lg:grid-cols-4' : 'grid-cols-1'}`}>
+          <div
+            className={`grid gap-8 ${
+              sidebar ? "grid-cols-1 lg:grid-cols-4" : "grid-cols-1"
+            }`}
+          >
             {/* Main Content Area */}
-            <main className={`${sidebar ? 'lg:col-span-3' : 'col-span-1'} animate-fade-in`}>
+            <main
+              className={`${
+                sidebar ? "lg:col-span-3" : "col-span-1"
+              } animate-fade-in`}
+            >
               {children}
             </main>
 
             {/* Sidebar */}
             {sidebar && (
-              <aside className="lg:col-span-1 animate-fade-in">
-                {sidebar}
-              </aside>
+              <aside className="lg:col-span-1 animate-fade-in">{sidebar}</aside>
             )}
           </div>
         </div>
@@ -113,7 +134,9 @@ export function ContentCard({ title, icon, children, className = "" }) {
             </div>
           )}
           {title && (
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">{title}</h2>
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+              {title}
+            </h2>
           )}
         </div>
       )}
@@ -152,10 +175,10 @@ export function SidebarWidget({ title, icon, children, className = "" }) {
  */
 export function FeatureGrid({ features, columns = 3 }) {
   const gridCols = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 md:grid-cols-2',
-    3: 'grid-cols-1 md:grid-cols-3',
-    4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+    1: "grid-cols-1",
+    2: "grid-cols-1 md:grid-cols-2",
+    3: "grid-cols-1 md:grid-cols-3",
+    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
   };
 
   return (
@@ -167,7 +190,9 @@ export function FeatureGrid({ features, columns = 3 }) {
               {feature.icon}
             </div>
           )}
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {feature.title}
+          </h3>
           <p className="text-gray-600 text-sm">{feature.description}</p>
         </div>
       ))}
@@ -179,12 +204,12 @@ export function FeatureGrid({ features, columns = 3 }) {
  * Call to Action Component
  * A styled CTA section
  */
-export function CallToAction({ 
-  title, 
-  description, 
-  primaryAction, 
+export function CallToAction({
+  title,
+  description,
+  primaryAction,
   secondaryAction,
-  background = "bg-gradient-to-r from-blue-600 to-indigo-600"
+  background = "bg-gradient-to-r from-blue-600 to-indigo-600",
 }) {
   return (
     <section className={`py-16 ${background} text-white`}>
